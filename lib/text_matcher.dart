@@ -53,8 +53,8 @@ class TextMatcher {
         ) {
           // if (textWithQuotes.isNotEmpty) _textsWithQuotes.last.add(match.group(0)!);
           if (!(data.containsKey(textWithQuotes))) {
-            String key = generateJsonKey(path, texts.last.length);
-
+            bool exists=data.values.where(((e)=>e.$1== generateJsonKey(path, texts.last.length,))).isNotEmpty;
+            String key = generateJsonKey(path, texts.last.length,usePath: exists);
             data[textWithQuotes] = (key,text);
             _texts.last.add(text);
           }
