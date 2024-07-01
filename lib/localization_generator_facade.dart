@@ -112,7 +112,7 @@ class LocalizationJsonFacade {
 
   void _generateModelAndEnum() {
     try {
-      final generatedClasses = _generateDartClasses.run();
+      final generatedClasses = _generateDartClasses.run(_fileManger.getJsonPath(jsonPath, filename??''));
       _fileManger.createGeneratedDartFile(generatedClasses.$1, 'json_text_mapper');
       _fileManger.createGeneratedDartFile(generatedClasses.$2, 'json_keys');
     } catch (e,s) {
@@ -122,7 +122,7 @@ class LocalizationJsonFacade {
   }
 void _createJson(){
     try{
-      _fileManger.writeDataToJsonFile(_textMapBuilder.textsMap, name: filename,path:jsonPath);}
+      _fileManger.writeDataToJsonFile(_textMapBuilder.textsMap, name: filename??'',path:jsonPath);}
         catch(e,s){
           throw (DetailedException(stackTrace: s, message:Exceptions.couldNotCreateJsonFile,verboseMessage: e.toString()));
 

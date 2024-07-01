@@ -76,10 +76,9 @@ class FileManger {
     return acceptedFiles;
   }
 
-  void writeDataToJsonFile(Map<String, String> map, {required String? name, required String? path}) {
+  void writeDataToJsonFile(Map<String, String> map, {required String name, required String? path}) {
     try {
-      final file = File(
-          '${path == './' || path == '.' || path == null ? _currentDirectory.path : path.startsWith('./') ? '${currentDirectory.path}${path.replaceFirst('.', '')}' : path}/${name ?? 'RENAME_TO_YOUR_LANGUAGE'}.json')..createSync(recursive: true);
+      final file = File(getJsonPath(path,name))..createSync(recursive: true);
       if (file.existsSync()) {
         final Map<String, String> old = _adapter.convertJsonToMap(file.readAsStringSync());
         map.addAll(old);
@@ -93,7 +92,7 @@ class FileManger {
       throw (Exceptions.couldNotWriteJsonFile);
     }
   }
-
+String getJsonPath(String? path,String filename)=>'${path == './' || path == '.' || path == null ? _currentDirectory.path : path.startsWith('./') ? '${currentDirectory.path}${path.replaceFirst('.', '')}' : path}/$filename.json';
   void writeDateToDartFile(String content, File file) => file.writeAsStringSync(content);
 
   void createGeneratedDartFile(String fileContent, String fileName) {

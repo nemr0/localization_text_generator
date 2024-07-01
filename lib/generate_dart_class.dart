@@ -40,7 +40,7 @@ class GenerateDartClasses {
     ${enumClass.accept(emitter)}''');
   }
 
-  String _generateModel() {
+  String _generateModel(String jsonPath) {
     final modelClass = Class((builder) => builder
       ..docs.add('/// Model Class [JsonTextMapper] contains method to get file from assets or saved file')
 
@@ -70,7 +70,7 @@ class GenerateDartClasses {
         /// Map<String, String> _json
         Field((builder) => builder
           ..name = 'json'
-          ..type = Reference('Map<String, String>')
+          ..type = Reference('Map<String, dynamic>')
           ..assignment = Code('{}'))
       ])
       ..methods.addAll([
@@ -79,30 +79,20 @@ class GenerateDartClasses {
         Method((builder) => builder..modifier=MethodModifier.async
           ..name = 'init'
           ..body = Code('''
-           final supportDir = await getApplicationSupportDirectory();
-           final path = supportDir.path + filePath;
-           late final String fileData;
-            if (File(path).existsSync()) {
+          final supportDir = await getApplicationSupportDirectory();
+          final path = supportDir.path + filePath;
+          late final String fileData;
            fileData = File(path).readAsStringSync();
-             }
-            else {
-             fileData = await rootBundle.loadString(assetsPath);
-                 }
-            json = jsonDecode(fileData);
+           json = jsonDecode(fileData);
           ''')
           ..optionalParameters.addAll([
-            Parameter((builder) => builder
-              ..required = false
-              ..type = Reference('String')
-              ..name = 'assetsPath'
-              ..named = true
-              ..defaultTo = Code("'assets/generated/strings.json'")),
+
             Parameter((builder) => builder
               ..required = false
               ..type = Reference('String')
               ..named = true
               ..name = 'filePath'
-              ..defaultTo = Code("'data/strings.json'")),
+              ..defaultTo = Code("'$jsonPath'")),
           ]))
       ]));
     return DartFormatter().format('''
@@ -124,9 +114,9 @@ class GenerateDartClasses {
       _packageName='';
     }
   }
-  (String model, String enumKeys) run() {
+  (String model, String enumKeys) run(String jsonPath) {
     if (keys.length == 1) assert(keys.first.isNotEmpty, 'Key cannot be empty');
-    return (_generateModel(), _generateEnumAndExtension());
+    return (_generateModel(jsonPath), _generateEnumAndExtension());
   }
 }
 
