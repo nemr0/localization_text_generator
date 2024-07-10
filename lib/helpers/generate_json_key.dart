@@ -1,3 +1,13 @@
-String generateJsonKey(String path, int id, {bool usePath = false}) => usePath
-    ? '${path.split('/')[path.split('/').length - 1].split('.').first}_$id'
-    : '${path.split('/').last.split('.').first}_$id';
+import 'dart:io';
+
+String generateJsonKey(String path, int id, {bool usePath = false})  {
+  String filename= path.split('/').last.split('.').first;
+  if(usePath) {
+    List<String> splits=path.split('/');
+    String directory = splits[splits.length-2];
+  return '${directory}_$filename';
+}
+  else{
+    return '${filename}_$id';
+  }
+}

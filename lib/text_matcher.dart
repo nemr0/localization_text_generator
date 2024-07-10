@@ -38,10 +38,7 @@ class TextMatcher {
         final text = (match.group(2) ?? match.group(3) ?? match.group(4) ?? match.group(5) ?? '').trim();
         final Uri? link = Uri.tryParse(text);
         final bool isNotLink = link == null ? true : !(link.isAbsolute);
-        final containsEnglish =
-        RegExp(r"[a-zA-Z-/*#&$@!_().{};><?,+=؛؟،:‘`%^€¥£|'\[\]\\]")
-        // RegExp(r"[a-zA-Z^€¥£|'\[\]\\]")
-            .hasMatch(text);
+        final containsEnglish = RegExp(r"[a-zA-Z-/*#&$@!_().{};><?,+=؛؟،:‘`%^€¥£|'\[\]\\]").hasMatch(text);
         /// adding to [_texts] and [textsWithQuotes]
         if (text.length>1 &&
             // text.contains('assets/') == false &&
@@ -51,7 +48,6 @@ class TextMatcher {
             isNotLink
             && !containsEnglish
         ) {
-          // if (textWithQuotes.isNotEmpty) _textsWithQuotes.last.add(match.group(0)!);
           if (!(data.containsKey(textWithQuotes))) {
             bool exists=data.values.where(((e)=>e.$1== generateJsonKey(path, texts.last.length,))).isNotEmpty;
             String key = generateJsonKey(path, texts.last.length,usePath: exists);
