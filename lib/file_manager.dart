@@ -19,7 +19,7 @@ class FileManger {
 
   /// Constructor
   FileManger(TextMatcher? textMatcher, Directory? directory) {
-    _textMatcher = textMatcher!;
+    _textMatcher = textMatcher;
     _currentDirectory = directory?.existsSync() == true? directory! : Directory.current.absolute;
     if (!_currentDirectory.existsSync()) {
       _currentDirectory.createSync(recursive: true);
