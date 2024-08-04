@@ -8,7 +8,7 @@ import 'package:localization_text_generator/text_matcher.dart';
 
 class FileManger {
   /// TextMatcher for current File
-  late TextMatcher _textMatcher;
+  late TextMatcher? _textMatcher;
 
   /// Current Working Directory
   late Directory _currentDirectory;
