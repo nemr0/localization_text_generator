@@ -20,12 +20,12 @@ class LocalizationJsonFacade {
   // File Manager
   late FileManger _fileManger;
   late PrintHelper _printer;
-
+  late GenerateDartClasses _generateDartClasses;
   // Text Map Builder
   late TextMapBuilder _textMapBuilder;
   late List<FileSystemEntity> _dartFiles;
   late List<File> _acceptedFiles;
-  late GenerateDartClasses _generateDartClasses;
+
 
   /// Args values initiated in [_initializeArgs]
   String? path;
@@ -63,6 +63,7 @@ class LocalizationJsonFacade {
       } else if (arg.name case CommandName.filename) {
         filename = arg.value;
       } else if (arg.name case CommandName.exclude) {
+
         exclude = arg.value;
       }
       else if( arg.name case CommandName.verbose){
@@ -95,15 +96,15 @@ class LocalizationJsonFacade {
       throw (DetailedException(stackTrace: s, message: Exceptions.noTextFound,verboseMessage: e.toString()));
 
     }
-    if (_textMatcher.texts.isEmpty) {
-      throw (DetailedException( message: Exceptions.noTextFound,verboseMessage: '_textMatcher.text.isEmpty'));
+    if (_textMatcher.data.isEmpty) {
+      throw (DetailedException( message: Exceptions.noTextFound,verboseMessage: '_textMatcher.data.isEmpty'));
     }
   }
 
   /// Creation of texts map
   void _createTextsMap() {
     try {
-      _textMapBuilder.generateTextMap(_textMatcher.texts, _acceptedFiles, _textMatcher.data);
+      _textMapBuilder.generateTextMap( _acceptedFiles, _textMatcher.data);
     } catch (e,s) {
       throw (DetailedException(stackTrace: s, message: Exceptions.couldNotGenerateTextMap,verboseMessage: e.toString()));
 

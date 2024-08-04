@@ -40,8 +40,8 @@ A Dart CLI Tool that can help you generate json file for all texts in all screen
 - ✅ Excludes Imports.
 - ✅ Excludes Keys.
 - ✅ Checks for any file with Cupertino or Material imports.
-- ⚠️ Automatically Check for Updates when launching package.
-
+- ⚠️ Add easy_localization support.
+- ⚠️ Add rename option.
 ## Authors
 
 - Moaid Mohamed [@devmoaid1](https://www.github.com/devmoaid1)

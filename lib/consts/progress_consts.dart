@@ -2,6 +2,7 @@ class ProgressConsts{
   static const String getAllFiles='Getting All Dart Files...';
   static const String fetchAllText='Fetching All Text...';
   static const String creatingTextMap='Creating Text Map...';
+  static const String fetchJson='Fetching Json Data...';
   static  String editingFiles(int current,int total)=>'Adding instances/keys to dart files  ($current/$total)';
 
   static const String generatingJsonClass='Generating Json Helper Dart Class and Enum...';

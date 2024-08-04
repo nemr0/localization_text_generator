@@ -6,26 +6,22 @@ import 'package:localization_text_generator/helpers/generate_json_key.dart';
 class TextMatcher {
   /// private gotten texts
   late List<Set<String>> _texts;
-  late List<Set<String>> _textsWithQuotes;
 
   /// texts getter
   List<Set<String>> get texts => _texts;
 
-  List<Set<String>> get textsWithQuotes => _textsWithQuotes;
-  Map<String , (String key,String textWithoutQuotes)> data = {};
+  Map<String , dynamic> data = {};
 
   /// Constructor
   TextMatcher() {
     // initialize texts
     _texts = [];
-    _textsWithQuotes = [];
   }
 
   /// extracts texts from dart file content and adds it to [texts]
-  void matchAndExtractTexts(String fileContent,String path) {
+  void matchAndExtractTexts(String fileContent,String path,[Map<String,dynamic>? matches]) {
 
     _texts.add({});
-    _textsWithQuotes.add({});
 
     /// Regular Expression for extraction
     final textExtractorExpression = RegExp(r'''(?<!import\s*)(?<!fontFamily:\s*)(?<!{\s*)(?<!//\s*)(?<!Key\()(?<!print\()(?<!log\()(?<!RegExp\()(?<!^\/\/\/?\s*)(['"])((?:(?!\1|(?<!\\)\$\{).)*)\1''', multiLine: true,) ;

@@ -18,8 +18,8 @@ class FileManger {
   Directory get currentDirectory => _currentDirectory;
 
   /// Constructor
-  FileManger(TextMatcher textMatcher, Directory directory) {
-    _textMatcher = textMatcher;
+  FileManger(TextMatcher? textMatcher, Directory directory) {
+    _textMatcher = textMatcher!;
     _currentDirectory = directory.existsSync() ? directory : Directory.current.absolute;
     if (!_currentDirectory.existsSync()) {
       _currentDirectory.createSync(recursive: true);
@@ -36,6 +36,7 @@ class FileManger {
     } else if (Directory('${currentDirectory.path}/lib').existsSync()) {
       glob = '${currentDirectory.path}/lib/**.dart';
     } else {
+      /// lib/**.dart
       glob = 'lib/**.dart';
     }
     List<FileSystemEntity> dartFiles = Glob(glob, recursive: true).listSync();
@@ -58,7 +59,7 @@ class FileManger {
   }
 
   /// Get Screen Texts
-  List<File> getScreensTexts(List<FileSystemEntity> dartFiles, bool checkEnabled) {
+  List<File> getScreensTexts(List<FileSystemEntity> dartFiles, [bool checkEnabled = false]) {
     List<File> acceptedFiles = [];
     for (final file in dartFiles) {
       // iterate over all files and get content
@@ -76,23 +77,25 @@ class FileManger {
     return acceptedFiles;
   }
 
-  void writeDataToJsonFile(Map<String, String> map, {required String name, required String? path}) {
+  void writeDataToJsonFile(Map<String, dynamic> map, {required String name, required String? path}) {
     try {
-      final file = File(getJsonPath(path,name))..createSync(recursive: true);
+      final file = File(getJsonPath(path, name))..createSync(recursive: true);
       if (file.existsSync()) {
         final Map<String, String> old = _adapter.convertJsonToMap(file.readAsStringSync());
         map.addAll(old);
       }
 
-      final data = _adapter.convertMapToJsonString(map);
+      final data = _adapter.convertMapToJsonString(map.map(((key, value) => MapEntry(key, value.toString()))));
 
       file.writeAsStringSync(data);
     } catch (e) {
-
       throw (Exceptions.couldNotWriteJsonFile);
     }
   }
-String getJsonPath(String? path,String filename)=>'${path == './' || path == '.' || path == null ? _currentDirectory.path : path.startsWith('./') ? '${currentDirectory.path}${path.replaceFirst('.', '')}' : path}/$filename.json';
+
+  String getJsonPath(String? path, String filename) =>
+      '${(path == './' || path == '.' || path == null)? _currentDirectory.path : path.startsWith('./') ? '${currentDirectory.path}${path.replaceFirst('.', '')}' : path}/$filename.json';
+
   void writeDateToDartFile(String content, File file) => file.writeAsStringSync(content);
 
   void createGeneratedDartFile(String fileContent, String fileName) {

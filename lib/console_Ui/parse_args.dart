@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 
-enum CommandType { option, flag, multiOption }
+enum CommandType { option, flag, multiOption,command }
 
 enum CommandName {
   path(CommandType.option),
@@ -12,7 +12,7 @@ enum CommandName {
   replaceTextWithVariables(CommandType.flag),
   filename(CommandType.option),
   exclude(CommandType.multiOption),
-  verbose(CommandType.flag);
+  verbose(CommandType.flag),rename(CommandType.command);
   final CommandType type;
 
   const CommandName(this.type);
@@ -27,6 +27,8 @@ class Arg {
 
 List<Arg> parseArgs(List<String> arguments) {
   var parser = ArgParser();
+  var renameParser=ArgParser();
+  parser.addCommand('rename',renameParser);
   /// Multi-Option
   /// ----------------------------------
   parser.addMultiOption(CommandName.exclude.name, abbr: 'e', defaultsTo: null,help: 'exclude a directory or a path | uses .contain on file paths');
@@ -56,6 +58,7 @@ List<Arg> parseArgs(List<String> arguments) {
   /// ----------------------------------
   ArgResults results = parser.parse(arguments);
   List<Arg> args = [];
+
   for (CommandName name in CommandName.values) {
     if (name.type case CommandType.option) {
       args.add(Arg(name: name, value: results.option(name.name)));
@@ -63,6 +66,8 @@ List<Arg> parseArgs(List<String> arguments) {
       args.add(Arg(name: name, value: results.flag(name.name)));
     } else if (name.type case CommandType.multiOption) {
       args.add(Arg(name: name, value: results.multiOption(name.name)));
+    } else if (name.type case CommandType.command) {
+      args.add(Arg(name: name, value: results.command?.name));
     }
   }
   return args;
