@@ -38,10 +38,18 @@ List<Arg> parseArgs(List<String> arguments) {
   // path
   parser.addOption(CommandName.path.name,
       abbr: 'p', defaultsTo: Directory.current.path, help: 'defaults to current directory if not used, example: "--path=./" or "-p ."');
+  renameParser.addOption(CommandName.path.name,
+      abbr: 'p', defaultsTo: Directory.current.path, help: 'defaults to current directory if not used, example: "--path=./" or "-p ."');
   // json path
   parser.addOption(CommandName.jsonPath.name,defaultsTo: '${Directory.current.path}/assets/resources');
+  renameParser.addOption(CommandName.jsonPath.name,defaultsTo: '${Directory.current.path}/assets/resources');
   // filename
   parser.addOption(
+    CommandName.filename.name,
+    abbr: 'n',
+    defaultsTo: 'strings',
+    help: 'generated json file name, defaults to: "strings", should be named without ".json".',
+  ); renameParser.addOption(
     CommandName.filename.name,
     abbr: 'n',
     defaultsTo: 'strings',
@@ -50,6 +58,7 @@ List<Arg> parseArgs(List<String> arguments) {
   /// Flags
   /// ----------------------------------
   parser.addFlag(CommandName.verbose.name,abbr: 'v',defaultsTo: false,help: 'if verbose or not');
+  renameParser.addFlag(CommandName.verbose.name,abbr: 'v',defaultsTo: false,help: 'if verbose or not');
 
   parser.addFlag(CommandName.screenOnly.name,
       defaultsTo: true, help: 'defaults to any screen with "StateFullWidget" or "StatelessWidget" ');

@@ -105,7 +105,7 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
   }
 
   @override
-  void generateLocalizationFile() {
+  void run() {
     _printer.showLogo();
     _printer.addProgress(ProgressConsts.getAllFiles);
 

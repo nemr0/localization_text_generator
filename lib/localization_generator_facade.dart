@@ -131,7 +131,7 @@ void _createJson(){
     }
 
   /// helper func that generates it all
-  void generateLocalizationFile() {
+  void run() {
     try {
       _printer.showLogo();
       _printer.addProgress(ProgressConsts.getAllFiles);
