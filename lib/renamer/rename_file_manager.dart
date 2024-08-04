@@ -21,10 +21,8 @@ class RenameFileManager extends FileManger{
   List<File> getScreensTexts(List<FileSystemEntity> dartFiles, [bool checkEnabled=false]){
     List<File> acceptedFiles = [];
     for (final file in dartFiles) {
-      // iterate over all files and get content
       if (file is File) {
         acceptedFiles.add(file);
-
       }
     }
 

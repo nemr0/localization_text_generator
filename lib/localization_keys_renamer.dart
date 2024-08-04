@@ -49,8 +49,9 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
     return;
   }
   LocalizationKeysRenamer(List<Arg> args) : super(args) {
-    _initializeArgs(args);
     _printer = PrintHelper();
+
+    _initializeArgs(args);
 
 
     _fileManger = RenameFileManager(null, path == null ? Directory.current : Directory(path!));
@@ -80,7 +81,7 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
   }
   void _fetchJson(){
     try{
-      if (jsonPath == null) throw (DetailedException(message: Exceptions.couldNotFindJsonFile));
+      if (jsonPath == null||!(jsonPath?.endsWith('.json')==true)) throw (DetailedException(message: Exceptions.couldNotFindJsonFile));
       _json = jsonDecode(File(jsonPath!).readAsStringSync());
     } catch (e,s){
       if(e is DetailedException) rethrow;
