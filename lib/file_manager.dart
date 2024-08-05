@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
+import 'package:localization_text_generator/console_Ui/parse_args.dart';
 import 'package:localization_text_generator/consts/exceptions.dart';
 import 'package:localization_text_generator/json_string_adapter.dart';
 import 'package:localization_text_generator/text_matcher.dart';
@@ -13,12 +14,14 @@ class FileManger {
   /// Current Working Directory
   late Directory _currentDirectory;
   late JsonStringAdapter _adapter;
-
+  late CommandName? _command;
   /// Current Working Directory Getter
   Directory get currentDirectory => _currentDirectory;
 
   /// Constructor
-  FileManger(TextMatcher? textMatcher, Directory? directory) {
+  FileManger(TextMatcher? textMatcher, Directory? directory,JsonStringAdapter adapter,[CommandName? command]) {
+    _adapter = adapter;
+    _command=command;
     _textMatcher = textMatcher;
     _currentDirectory = directory?.existsSync() == true? directory! : Directory.current.absolute;
     if (!_currentDirectory.existsSync()) {
@@ -81,7 +84,7 @@ class FileManger {
     try {
       final file = File(getJsonPath(path, name))..createSync(recursive: true);
       if (file.existsSync()) {
-        final Map<String, String> old = _adapter.convertJsonToMap(file.readAsStringSync());
+        final Map<String, String> old = _adapter.convertJsonToMap(file.readAsStringSync(),_command);
         map.addAll(old);
       }
 

@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:localization_text_generator/json_string_adapter.dart';
 import 'package:localization_text_generator/localization_generator_facade.dart';
 import 'package:localization_text_generator/renamer/rename_file_manager.dart';
 import 'package:localization_text_generator/renamer/rename_text_map_builder.dart';
@@ -17,6 +17,7 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
   // File Manager
   late RenameFileManager _fileManger;
   late PrintHelper _printer;
+  late JsonStringAdapter _adapter;
 
   // Text Map Builder
   late RenameTextMapBuilder _textMapBuilder;
@@ -50,13 +51,14 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
   }
   LocalizationKeysRenamer(List<Arg> args) : super(args) {
     _printer = PrintHelper();
-
+    _adapter= JsonStringAdapter();
     _initializeArgs(args);
 
 
-    _fileManger = RenameFileManager(null, path == null ? Directory.current : Directory(path!));
+    _fileManger = RenameFileManager(null, path == null ? Directory.current : Directory(path!),CommandName.rename,_adapter);
 
     _textMapBuilder = RenameTextMapBuilder(_fileManger);
+    _adapter= JsonStringAdapter();
   }
 
   void _getAllFiles() {
@@ -80,12 +82,20 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
 
   }
   void _fetchJson(){
+    final String actualPath='$jsonPath/new-keys.json';
     try{
-      if (jsonPath == null||!(jsonPath?.endsWith('.json')==true)) throw (DetailedException(message: Exceptions.couldNotFindJsonFile));
-      _json = jsonDecode(File(jsonPath!).readAsStringSync());
+      print(actualPath);
+      if (jsonPath == null||filename==null||!File(actualPath).existsSync()) throw (DetailedException(message: Exceptions.couldNotFindJsonFile));
+      String content=File(actualPath).readAsStringSync();
+
+      if(content.isEmpty|| content == '{}'){
+        throw DetailedException(message: Exceptions.noTextFoundInJson,verboseMessage: 'contextOfJson: $content');
+      }
+      _json=_adapter.convertJsonToMap(content);
     } catch (e,s){
+      print(s);
       if(e is DetailedException) rethrow;
-      throw DetailedException(message: e.toString(),stackTrace: s,);
+      throw DetailedException(message: Exceptions.couldNotFindJsonFile,stackTrace: s,verboseMessage: e.toString());
     }
   }
   /// Creation of texts map
@@ -93,12 +103,13 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
     try {
       _textMapBuilder.generateTextMap( _acceptedFiles, _json);
     } catch (e, s) {
+      if(e is DetailedException) rethrow;
       throw (DetailedException(
           stackTrace: s, message: Exceptions.couldNotGenerateTextMap, verboseMessage: e.toString()));
     }
   }  void _createJson() {
     try {
-      _fileManger.writeDataToJsonFile(_json, name: filename??'newJson', path: jsonPath);
+      _fileManger.writeDataToJsonFile(_json, name: filename??'new_json', path: jsonPath);
     } catch (e, s) {
       throw (DetailedException(
           stackTrace: s, message: Exceptions.couldNotGenerateTextMap, verboseMessage: e.toString()));
@@ -107,28 +118,36 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
 
   @override
   void run() {
-    _printer.showLogo();
-    _printer.addProgress(ProgressConsts.getAllFiles);
+    try{
+      _printer.showLogo();
+      _printer.addProgress(ProgressConsts.getAllFiles);
 
-    /// Listing Files
-    _getAllFiles();
+      /// Listing Files
+      _getAllFiles();
 
-    _printer.updateProgress(ProgressConsts.fetchAllText);
+      _printer.updateProgress(ProgressConsts.fetchAllText);
 
-    /// Fetching all Text
-    _fetchAllTexts();
-    _printer.updateProgress(ProgressConsts.fetchJson);
+      /// Fetching all Text
+      _fetchAllTexts();
+      _printer.updateProgress(ProgressConsts.fetchJson);
 
-    _fetchJson();
-    _printer.updateProgress(ProgressConsts.creatingTextMap);
-    /// Text Map Creation
-    _createTextsMap();
+      _fetchJson();
+      _printer.updateProgress(ProgressConsts.creatingTextMap);
 
+      /// Text Map Creation
+      _createTextsMap();
 
-    /// Converting Map To String
-    _printer.updateProgress(ProgressConsts.generatingJsonFile);
-    /// Writing JSON File
-    _createJson();
-    _printer.completeProgress();
+      /// Converting Map To String
+      _printer.updateProgress(ProgressConsts.generatingJsonFile);
+
+      /// Writing JSON File
+      _createJson();
+      _printer.completeProgress();
+    } on DetailedException catch (e,s) {
+      print(s);
+      _printer.failed('${e.message}${verbose?'\n${e.verboseMessage}\n${e.stackTrace}':''}');
+
+      return;
+    }
   }
 }

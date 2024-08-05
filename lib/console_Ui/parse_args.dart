@@ -41,18 +41,19 @@ List<Arg> parseArgs(List<String> arguments) {
   renameParser.addOption(CommandName.path.name,
       abbr: 'p', defaultsTo: Directory.current.path, help: 'defaults to current directory if not used, example: "--path=./" or "-p ."');
   // json path
-  parser.addOption(CommandName.jsonPath.name,defaultsTo: '${Directory.current.path}/assets/resources');
-  renameParser.addOption(CommandName.jsonPath.name,defaultsTo: '${Directory.current.path}/assets/resources');
+  parser.addOption(CommandName.jsonPath.name,defaultsTo: Directory.current.path);
+  renameParser.addOption(CommandName.jsonPath.name,defaultsTo: Directory.current.path);
   // filename
   parser.addOption(
     CommandName.filename.name,
     abbr: 'n',
     defaultsTo: 'strings',
     help: 'generated json file name, defaults to: "strings", should be named without ".json".',
-  ); renameParser.addOption(
+  );
+  renameParser.addOption(
     CommandName.filename.name,
     abbr: 'n',
-    defaultsTo: 'strings',
+    defaultsTo: 'new-keys',
     help: 'generated json file name, defaults to: "strings", should be named without ".json".',
   );
   /// Flags

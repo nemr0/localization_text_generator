@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:localization_text_generator/console_Ui/parse_args.dart';
 import 'package:localization_text_generator/file_manager.dart';
+import 'package:localization_text_generator/json_string_adapter.dart';
 import 'package:localization_text_generator/text_matcher.dart';
 
 class RenameFileManager extends FileManger{
@@ -11,28 +13,13 @@ class RenameFileManager extends FileManger{
   /// Current Working Directory Getter
   @override
   Directory get currentDirectory => _currentDirectory;
-  RenameFileManager(TextMatcher? textMatcher,Directory directory) : super(textMatcher, directory){
+  RenameFileManager(TextMatcher? textMatcher,Directory directory,CommandName command,JsonStringAdapter adapter) : super(textMatcher, directory,adapter,command){
     _currentDirectory = directory.existsSync() ? directory : Directory.current.absolute;
     if (!_currentDirectory.existsSync()) {
       _currentDirectory.createSync(recursive: true);
     }
   }
   @override
-  List<File> getScreensTexts(List<FileSystemEntity> dartFiles, [bool checkEnabled=false]){
-    List<File> acceptedFiles = [];
-    for (final file in dartFiles) {
-      if (file is File) {
-        acceptedFiles.add(file);
-      }
-    }
-
-    return acceptedFiles;
-  }
-
-
-
-
-
-
+  List<File> getScreensTexts(List<FileSystemEntity> dartFiles, [bool checkEnabled=false])=>dartFiles.whereType<File>().toList();
 
 }

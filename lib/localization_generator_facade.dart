@@ -5,6 +5,7 @@ import 'package:localization_text_generator/console_Ui/printer.dart';
 import 'package:localization_text_generator/exception/detailed_exception.dart';
 import 'package:localization_text_generator/file_manager.dart';
 import 'package:localization_text_generator/generate_dart_class.dart';
+import 'package:localization_text_generator/json_string_adapter.dart';
 import 'package:localization_text_generator/text_map_builder.dart';
 import 'package:localization_text_generator/text_matcher.dart';
 
@@ -25,7 +26,7 @@ class LocalizationJsonFacade {
   late TextMapBuilder _textMapBuilder;
   late List<FileSystemEntity> _dartFiles;
   late List<File> _acceptedFiles;
-
+  late JsonStringAdapter _adapter;
 
   /// Args values initiated in [_initializeArgs]
   String? path;
@@ -41,8 +42,8 @@ class LocalizationJsonFacade {
 
     _initializeArgs(args);
     _textMatcher = TextMatcher();
-
-    _fileManger = FileManger(_textMatcher, path == null ? Directory.current : Directory(path!));
+    _adapter= JsonStringAdapter();
+    _fileManger = FileManger(_textMatcher, path == null ? Directory.current : Directory(path!),_adapter);
 
     _generateDartClasses = GenerateDartClasses(_fileManger.currentDirectory.path);
 
