@@ -19,8 +19,8 @@ class LocalizationJsonFacade {
   late TextMatcher _textMatcher;
 
   // File Manager
-  late FileManger _fileManger;
-  late PrintHelper _printer;
+  late final FileManger fileManger;
+  late final PrintHelper printer;
   late GenerateDartClasses _generateDartClasses;
   // Text Map Builder
   late TextMapBuilder _textMapBuilder;
@@ -38,23 +38,23 @@ class LocalizationJsonFacade {
   late bool verbose;
   // Constructor
   LocalizationJsonFacade(List<Arg> args) {
-    _printer = PrintHelper();
+    printer = PrintHelper();
 
     _initializeArgs(args);
     _textMatcher = TextMatcher();
     _adapter= JsonStringAdapter();
-    _fileManger = FileManger(_textMatcher, path == null ? Directory.current : Directory(path!),_adapter);
+    fileManger = FileManger(_textMatcher, path == null ? Directory.current : Directory(path!),_adapter);
 
-    _generateDartClasses = GenerateDartClasses(_fileManger.currentDirectory.path);
+    _generateDartClasses = GenerateDartClasses(fileManger.currentDirectory.path);
 
-    _textMapBuilder = TextMapBuilder(_fileManger, _generateDartClasses);
+    _textMapBuilder = TextMapBuilder(fileManger, _generateDartClasses);
 
   }
 
   void _initializeArgs(List<Arg> args) {
 
     for (Arg arg in args) {
-      _printer.print('${arg.name.name}:${arg.value}');
+      printer.print('${arg.name.name}:${arg.value}');
       if (arg.name case CommandName.path) {
         path = arg.value;
       } else if (arg.name case CommandName.screenOnly) {
@@ -80,7 +80,7 @@ class LocalizationJsonFacade {
   /// Listing All Directory Files
   void _getAllFiles() {
     try {
-      _dartFiles = _fileManger.listDirectoryDartFiles(exclude);
+      _dartFiles = fileManger.listDirectoryDartFiles(exclude);
     } catch (e,s) {
       throw (DetailedException(stackTrace: s, message: Exceptions.noFilesFound,verboseMessage: e.toString()));
     }
@@ -92,7 +92,7 @@ class LocalizationJsonFacade {
   /// Gets all files within lib folder, and returns files text
   void _fetchAllTexts() {
     try {
-      _acceptedFiles = _fileManger.getScreensTexts(_dartFiles, defaultsToScreensOnly);
+      _acceptedFiles = fileManger.getScreensTexts(_dartFiles, defaultsToScreensOnly);
     } catch (e,s) {
       throw (DetailedException(stackTrace: s, message: Exceptions.noTextFound,verboseMessage: e.toString()));
 
@@ -114,9 +114,9 @@ class LocalizationJsonFacade {
 
   void _generateModelAndEnum() {
     try {
-      final generatedClasses = _generateDartClasses.run(_fileManger.getJsonPath(jsonPath, filename??''));
-      _fileManger.createGeneratedDartFile(generatedClasses.$1, 'json_text_mapper');
-      _fileManger.createGeneratedDartFile(generatedClasses.$2, 'json_keys');
+      final generatedClasses = _generateDartClasses.run(fileManger.getJsonPath(jsonPath, filename??''));
+      fileManger.createGeneratedDartFile(generatedClasses.$1, 'json_text_mapper');
+      fileManger.createGeneratedDartFile(generatedClasses.$2, 'json_keys');
     } catch (e,s) {
       throw (DetailedException(stackTrace: s, message:Exceptions.couldNotGenerateModelOrEnum,verboseMessage: e.toString()));
 
@@ -124,7 +124,7 @@ class LocalizationJsonFacade {
   }
 void _createJson(){
     try{
-      _fileManger.writeDataToJsonFile(_textMapBuilder.textsMap, name: filename??'',path:jsonPath);}
+      fileManger.writeDataToJsonFile(_textMapBuilder.textsMap, name: filename??'',path:jsonPath);}
         catch(e,s){
           throw (DetailedException(stackTrace: s, message:Exceptions.couldNotCreateJsonFile,verboseMessage: e.toString()));
 
@@ -134,35 +134,35 @@ void _createJson(){
   /// helper func that generates it all
   void run() {
     try {
-      _printer.showLogo();
-      _printer.addProgress(ProgressConsts.getAllFiles);
+      printer.showLogo();
+      printer.addProgress(ProgressConsts.getAllFiles);
 
       /// Listing Files
       _getAllFiles();
 
-      _printer.updateProgress(ProgressConsts.fetchAllText);
+      printer.updateProgress(ProgressConsts.fetchAllText);
 
       /// Fetching all Text
       _fetchAllTexts();
 
-      _printer.updateProgress(ProgressConsts.creatingTextMap);
+      printer.updateProgress(ProgressConsts.creatingTextMap);
 
       /// Text Map Creation
       _createTextsMap();
-      _printer.updateProgress(ProgressConsts.generatingJsonClass);
+      printer.updateProgress(ProgressConsts.generatingJsonClass);
 
       /// Generating Dart model and enum
       _generateModelAndEnum();
 
       /// Converting Map To String
-      _printer.updateProgress(ProgressConsts.generatingJsonFile);
+      printer.updateProgress(ProgressConsts.generatingJsonFile);
 
       /// Writing JSON File
       _createJson();
-      _printer.completeProgress();
+      printer.completeProgress();
     } on DetailedException catch (e) {
 
-      _printer.failed('${e.message}${verbose?'\n${e.verboseMessage}\n${e.stackTrace}':''}');
+      printer.failed('${e.message}${verbose?'\n${e.verboseMessage}\n${e.stackTrace}':''}');
 
       return;
     }

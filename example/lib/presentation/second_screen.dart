@@ -5,7 +5,7 @@ class Screen2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         Text('first text from screen 2'),
         Text('second text from screen 2'),

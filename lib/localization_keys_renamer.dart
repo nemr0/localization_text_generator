@@ -55,7 +55,7 @@ class LocalizationKeysRenamer extends LocalizationJsonFacade {
     _initializeArgs(args);
 
 
-    _fileManger = RenameFileManager(null, path == null ? Directory.current : Directory(path!),CommandName.rename,_adapter);
+    _fileManger = RenameFileManager(null, path == null ? Directory.current : Directory(path!) ,_adapter);
 
     _textMapBuilder = RenameTextMapBuilder(_fileManger);
     _adapter= JsonStringAdapter();

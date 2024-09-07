@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// 'https://downloads.hindawi.org/books/reader/'
 const String url ='https://downloads.hindawi.org/books/reader/';
 class StartPoint extends StatefulWidget {
-  const StartPoint({Key? key}) : super(key: key);
+  const StartPoint({super.key});
 
   @override
   State<StartPoint> createState() => _StartPointState();
@@ -23,7 +23,7 @@ class _StartPointState extends State<StartPoint> {
       super.initState();
     }
 
-    return MaterialApp(
+    return const MaterialApp(
       home: ExampleScreen(),
     );
   }
@@ -36,25 +36,25 @@ class _StartPointState extends State<StartPoint> {
 
 /// "ExampleScreen"
 class ExampleScreen extends StatelessWidget {
-  const ExampleScreen({Key? key}) : super(key: key);
+  const ExampleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String text = '0 This is a text within a variable';
-    final String textTwo = '1 This is the second text variable';
+    const String text = '0 This is a text within a variable';
+    const String textTwo = '1 This is the second text variable';
     return Scaffold(
       appBar: AppBar(
-        leading: Text('2 This is text within AppBar'),
+        leading: const Text('2 This is text within AppBar'),
       ),
       body: Column(
-        key: ValueKey('keyyyy'),
+        key: const ValueKey('keyyyy'),
         children: [
-          Text(
+          const Text(
             text,
             style: TextStyle(color: Colors.amber),
           ),
           RichText(
-            text: TextSpan(
+            text: const TextSpan(
               text: '3 This is Text',
               children: [
                 TextSpan(text: '4 Within'),
@@ -65,14 +65,14 @@ class ExampleScreen extends StatelessWidget {
               ],
             ),
           ),
-          Text('8 This is hard codded text within the Text Widget '),
-          Text('8 This is hard \ncodded \rtext within\'the \\Text| /Widget '),
-          Text('8 This is hard codded text within the Text Widget '),
-          Text(
+          const Text('8 This is hard codded text within the Text Widget '),
+          const Text('8 This is hard \ncodded \rtext within\'the \\Text| /Widget '),
+          const Text('8 This is hard codded text within the Text Widget '),
+          const Text(
               '9 This one is Under Construction!\n it will be available soon :) '),
-          Text(
+          const Text(
               '10 Also, all of Flutter Community Contributions, I hope I\'m not forgetting anyone :\''),
-          Text('''11 Triple
+          const Text('''11 Triple
           Quoted
           Text\n x
           \\

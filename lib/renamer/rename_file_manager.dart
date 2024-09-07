@@ -13,7 +13,7 @@ class RenameFileManager extends FileManger{
   /// Current Working Directory Getter
   @override
   Directory get currentDirectory => _currentDirectory;
-  RenameFileManager(TextMatcher? textMatcher,Directory directory,CommandName command,JsonStringAdapter adapter) : super(textMatcher, directory,adapter,command){
+  RenameFileManager(TextMatcher? textMatcher,Directory directory,JsonStringAdapter adapter) : super(textMatcher, directory,adapter){
     _currentDirectory = directory.existsSync() ? directory : Directory.current.absolute;
     if (!_currentDirectory.existsSync()) {
       _currentDirectory.createSync(recursive: true);

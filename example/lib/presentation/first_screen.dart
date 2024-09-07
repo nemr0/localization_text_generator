@@ -7,27 +7,27 @@ class Screen1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final value = '';
+    const value = '';
     return Column(
       children: [
-        Text(
+        const Text(
           "first text from screen 1",
           style: TextStyle(),
         ),
-        Text('second text from screen 1'),
-        Text('third text from screen 1'),
-        Text(
+        const Text('second text from screen 1'),
+        const Text('third text from screen 1'),
+        const Text(
           '$value',
         ),
-        Text(
+        const Text(
           value,
         ),
-        Text(
+        const Text(
           value,
           style: TextStyle(),
         ),
-        RichText(text: TextSpan(children: [TextSpan(text: 'Richtext')])),
-        Text('''This is a long text
+        RichText(text: const TextSpan(children: [TextSpan(text: 'Richtext')])),
+        const Text('''This is a long text
 that spans across multiple lines
 using triple quotes''')
       ],
